@@ -1,31 +1,32 @@
 import { useState } from "react";
 
 export default function App() {
+  return (
+    <div>
+      <ToDoWrapper />
+    </div>
+  );
+}
+
+function ToDoWrapper() {
+  return (
+    <div className="todowrapper">
+      <h2>Get things done💯</h2>
+      <ToDoForm />
+    </div>
+  );
+}
+
+function ToDoForm() {
   const tasks = [
     { text: "Read book", id: 1, done: false },
     { text: "Run", id: 2, done: false },
   ];
 
-  return (
-    <div>
-      <ToDoWrapper tasks={tasks} />
-    </div>
-  );
-}
-
-function ToDoWrapper({ tasks }) {
-  return (
-    <div className="todowrapper">
-      <h2>Get things done</h2>
-      <ToDoForm tasks={tasks} />
-    </div>
-  );
-}
-
-function ToDoForm({ tasks }) {
   const [task, setTask] = useState(tasks);
 
   function handleAddTaks(newTask) {
+    if (!newTask) return alert("You can't add empty task.");
     setTask((tasks) => [
       ...tasks,
       { text: newTask, id: Date.now(), done: false },
@@ -47,7 +48,11 @@ function ToDoForm({ tasks }) {
   return (
     <div className="todoform">
       <AddToDo onAdd={handleAddTaks} />
-      <ToDo tasks={task} onDelete={handleDeleteTask} onToggle={handleToggle} />
+      <ToDoTasks
+        tasks={task}
+        onDelete={handleDeleteTask}
+        onToggle={handleToggle}
+      />
     </div>
   );
 }
@@ -73,25 +78,37 @@ function AddToDo({ onAdd }) {
     </form>
   );
 }
-function ToDo({ tasks, onDelete, onToggle }) {
+
+function ToDoTasks({ tasks, onDelete, onToggle }) {
   return (
     <div className="tasks">
       <ul>
         {tasks.map((task) => (
-          <li key={task.id} className="task">
-            <input
-              className="checkbox"
-              type="checkbox"
-              value={task.done}
-              onChange={() => onToggle(task.id)}
-            />
-            <span style={task.done ? { textDecoration: "line-through" } : {}}>
-              {task.text}
-            </span>
-            <button onClick={() => onDelete(task.id)}>&times;</button>
-          </li>
+          <ToDoTask
+            task={task}
+            onDelete={onDelete}
+            onToggle={onToggle}
+            key={task.id}
+          />
         ))}
       </ul>
     </div>
+  );
+}
+
+function ToDoTask({ task, onDelete, onToggle }) {
+  return (
+    <li className="task">
+      <input
+        className="checkbox"
+        type="checkbox"
+        value={task.done}
+        onChange={() => onToggle(task.id)}
+      />
+      <span style={task.done ? { textDecoration: "line-through" } : {}}>
+        {task.text}
+      </span>
+      <button onClick={() => onDelete(task.id)}>&times;</button>
+    </li>
   );
 }
