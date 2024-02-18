@@ -48,11 +48,16 @@ function ToDoForm() {
   return (
     <div className="todoform">
       <AddToDo onAdd={handleAddTaks} />
-      <ToDoTasks
-        tasks={task}
-        onDelete={handleDeleteTask}
-        onToggle={handleToggle}
-      />
+      <ToDoList>
+        {tasks.map((task) => (
+          <ToDo
+            task={task}
+            onDelete={handleDeleteTask}
+            onToggle={handleToggle}
+            key={task.id}
+          />
+        ))}
+      </ToDoList>
     </div>
   );
 }
@@ -79,24 +84,15 @@ function AddToDo({ onAdd }) {
   );
 }
 
-function ToDoTasks({ tasks, onDelete, onToggle }) {
+function ToDoList({ children }) {
   return (
     <div className="tasks">
-      <ul>
-        {tasks.map((task) => (
-          <ToDoTask
-            task={task}
-            onDelete={onDelete}
-            onToggle={onToggle}
-            key={task.id}
-          />
-        ))}
-      </ul>
+      <ul>{children}</ul>
     </div>
   );
 }
 
-function ToDoTask({ task, onDelete, onToggle }) {
+function ToDo({ task, onDelete, onToggle }) {
   return (
     <li className="task">
       <input
